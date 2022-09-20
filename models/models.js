@@ -3,6 +3,8 @@ const {DataTypes} = require('sequelize')
 
 const UserModel = sequelize.define("user", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  firstName: { type: DataTypes.STRING },
+  lastName: { type: DataTypes.STRING },
   phone: { type: DataTypes.STRING, unique: true },
   email: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING },
@@ -11,7 +13,6 @@ const UserModel = sequelize.define("user", {
   activationLink: { type: DataTypes.STRING },
   role: { type: DataTypes.STRING, defaultValue: "USER" },
 });
-
 
 const TokenModel = sequelize.define("token", {
   refreshToken: { type: DataTypes.STRING },
@@ -83,7 +84,7 @@ ProductModel.belongsTo(TypeModel);
 BrandModel.hasMany(ProductModel);
 ProductModel.belongsTo(BrandModel);
 
-ProductModel.hasOne(RatingModel);
+ProductModel.hasMany(RatingModel);
 RatingModel.belongsTo(ProductModel);
 
 ProductModel.hasOne(BasketProductModel);
