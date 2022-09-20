@@ -12,7 +12,7 @@ class UserController {
         return next(ApiError.BadRequest("Ошибка валидации", errors.array()));
       }
       const { email, phone, password, role } = req.body;
-      const { img } = req.files;
+      const img = req?.files?.img;
 
       const userData = await UserService.registration(
         email,
@@ -111,7 +111,7 @@ class UserController {
     try {
       const { id } = req.params;
       const { email, phone, password, role } = req.body;
-      const { img } = req.files;
+      const img = req?.files?.img;
 
       const user = await UserService.edit(id, email, phone, password, img, role);
 

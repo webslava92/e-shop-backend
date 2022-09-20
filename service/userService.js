@@ -127,23 +127,25 @@ class UserService {
       img.mv(path.resolve(__dirname, "..", "static", fileName));
 
       if (user.img) {
-        fs.unlink(path.join(__dirname, user.img), (err) => {
+        fs.unlink(path.join(__dirname, "..", "static", user.img), (err) => {
           if (err)
             throw ApiError.BadRequest(
               `Удаление файла ${user.img} не выполнено`
             );
           else {
-            console.log(`./static/${user.img} deleted successfully`);
+            console.log(`${user.img} deleted successfully`);
           }
+          user.save().then(() => user);
         });
       }
+      user.img = fileName;
     }
 
     if (email) user.email = email;
     if (phone) user.phone = phone;
     const hashPassword = await bcrypt.hash(password, 3);
     if (password) user.password = hashPassword;
-    if (fileName) user.fileName = fileName;
+    
     if (role) user.role = role;
 
     const updateUser = await user.save().then(() => user);

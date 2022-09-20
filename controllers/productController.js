@@ -6,9 +6,8 @@ class ProductController {
   async create(req, res, next) {
     try {
       let { name, price, typeId, brandId, info } = req.body;
-      const { img } = req.files;
-      let fileName = uuid.v4() + ".jpg";
-      img.mv(path.resolve(__dirname, "..", "static", fileName));
+      const img = req?.files?.img;
+      
 
       const product = await ProductService.create(
         name,
@@ -16,7 +15,7 @@ class ProductController {
         typeId,
         brandId,
         info,
-        fileName
+        img
       );
 
       return res.json(product);

@@ -3,6 +3,8 @@ const {DataTypes} = require('sequelize')
 
 const UserModel = sequelize.define("user", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  firstName: { type: DataTypes.STRING },
+  lastName: { type: DataTypes.STRING },
   phone: { type: DataTypes.STRING, unique: true },
   email: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING },
@@ -48,8 +50,10 @@ const ProductModel = sequelize.define("product", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER },
+  rating: { type: DataTypes.INTEGER, defaultValue: 0 },
   img: { type: DataTypes.STRING },
 });
+
 
 const RatingModel = sequelize.define("rating", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -80,10 +84,13 @@ ProductModel.belongsTo(TypeModel);
 BrandModel.hasMany(ProductModel);
 ProductModel.belongsTo(BrandModel);
 
-ProductModel.hasOne(RatingModel);
+ProductModel.hasMany(RatingModel);
 RatingModel.belongsTo(ProductModel);
 
-ProductModel.hasMany(ProductInfoModel);
+ProductModel.hasOne(BasketProductModel);
+BasketProductModel.belongsTo(ProductModel);
+
+ProductModel.hasMany(ProductInfoModel, { as: "info" });
 ProductInfoModel.belongsTo(ProductModel);
 
 TypeModel.belongsToMany(BrandModel, {through: TypeBrandModel});

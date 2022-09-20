@@ -1,19 +1,13 @@
-const uuid = require("uuid");
-const path = require("path");
 const BrandService = require("../service/brandService");
 
 class BrandController {
   async create(req, res, next) {
     try {
       const { name, description } = req.body;
-      const { img } = req.files;
-      let fileName;
-      if (img) {
-        fileName = uuid.v4() + ".jpg";
-        img.mv(path.resolve(__dirname, "..", "static", fileName));
-      }
+      const img = req?.files?.img;
+      
 
-      const brand = await BrandService.create(name, description, fileName);
+      const brand = await BrandService.create(name, description, img);
 
       return res.json(brand);
     } catch (e) {
@@ -40,15 +34,9 @@ class BrandController {
     try {
       const { id } = req.params;
       const { name, description } = req.body;
+      const img = req?.files?.img;
 
-      const { img } = req.files;
-      let fileName; 
-      if (img) {
-        fileName = uuid.v4() + ".jpg";
-        img.mv(path.resolve(__dirname, "..", "static", fileName));
-      }
-
-      const brand = await BrandService.edit(id, name, description, fileName);
+      const brand = await BrandService.edit(id, name, description, img);
 
       return res.json(brand);
     } catch (e) {
