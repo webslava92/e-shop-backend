@@ -1,14 +1,20 @@
+const uuid = require("uuid");
+const path = require("path");
+const fs = require("fs");
 const { ProductModel, ProductInfoModel } = require("../models/models");
 const ApiError = require("../exceptions/ApiError");
 
 class ProductService {
-  async create(name, price, typeId, brandId, info, fileName) {
+  async create(name, price, typeId, brandId, info, img) {
     let product = await ProductModel.findOne({ where: { name } });
     if (product) {
       throw ApiError.BadRequest(
         `Товар: ${name}, уже существует. Укажите другое наименование`
       );
     }
+
+    let fileName = uuid.v4() + ".jpg";
+    img.mv(path.resolve(__dirname, "..", "static", fileName));
 
     product = await ProductModel.create({
       name,
@@ -76,7 +82,7 @@ class ProductService {
   async getOne(id) {
     const product = await ProductModel.findOne({
       where: { id },
-      // include: [{ model: ProductInfoModel, as: "info" }],
+      include: [{ model: ProductInfoModel, as: "info" }],
     });
     return product;
   }

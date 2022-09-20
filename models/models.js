@@ -12,6 +12,7 @@ const UserModel = sequelize.define("user", {
   role: { type: DataTypes.STRING, defaultValue: "USER" },
 });
 
+
 const TokenModel = sequelize.define("token", {
   refreshToken: { type: DataTypes.STRING },
 });
@@ -48,8 +49,10 @@ const ProductModel = sequelize.define("product", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER },
+  rating: { type: DataTypes.INTEGER, defaultValue: 0 },
   img: { type: DataTypes.STRING },
 });
+
 
 const RatingModel = sequelize.define("rating", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -83,7 +86,10 @@ ProductModel.belongsTo(BrandModel);
 ProductModel.hasOne(RatingModel);
 RatingModel.belongsTo(ProductModel);
 
-ProductModel.hasMany(ProductInfoModel);
+ProductModel.hasOne(BasketProductModel);
+BasketProductModel.belongsTo(ProductModel);
+
+ProductModel.hasMany(ProductInfoModel, { as: "info" });
 ProductInfoModel.belongsTo(ProductModel);
 
 TypeModel.belongsToMany(BrandModel, {through: TypeBrandModel});
